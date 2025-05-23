@@ -39,6 +39,9 @@ struct MapItemView: View {
                 Text("Description or address")
                     .font(.subheadline)
                     .foregroundColor(.white.opacity(0.8))
+                Text("11:00 AM ")
+                    .font(.title3)
+                    .foregroundColor(.white.opacity(0.8))
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)

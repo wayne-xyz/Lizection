@@ -11,7 +11,7 @@ class ToGoItem {
     var longitude: Double
     var startTime: Date
     var endTime: Date
-    var eventIdentifier: String?
+    var eventIdentifier: String? // from the calendar
 
     init(
         id: UUID = UUID(),
