@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CC9E0D402D633E9100584402 /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC9E0D3F2D633E9100584402 /* ArcGIS */; };
+		CC7B87032DE0E653000F7B4F /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC7B87022DE0E653000F7B4F /* ArcGIS */; };
+		CC7B87052DE0E67E000F7B4F /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC7B87042DE0E67E000F7B4F /* ArcGIS */; };
+		CC7B87072DE0EE90000F7B4F /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC7B87062DE0EE90000F7B4F /* ArcGIS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,22 +35,9 @@
 		CC9E0D002D61A7B400584402 /* LizectionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LizectionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CC7B86FB2DE032AC000F7B4F /* Exceptions for "Lizection" folder in "Lizection" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = CC9E0CE32D61A7B200584402 /* Lizection */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CC9E0CE62D61A7B200584402 /* Lizection */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				CC7B86FB2DE032AC000F7B4F /* Exceptions for "Lizection" folder in "Lizection" target */,
-			);
 			path = Lizection;
 			sourceTree = "<group>";
 		};
@@ -69,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC9E0D402D633E9100584402 /* ArcGIS in Frameworks */,
+				CC7B87052DE0E67E000F7B4F /* ArcGIS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC7B87032DE0E653000F7B4F /* ArcGIS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC7B87072DE0EE90000F7B4F /* ArcGIS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +121,7 @@
 			);
 			name = Lizection;
 			packageProductDependencies = (
-				CC9E0D3F2D633E9100584402 /* ArcGIS */,
+				CC7B87042DE0E67E000F7B4F /* ArcGIS */,
 			);
 			productName = Lizection;
 			productReference = CC9E0CE42D61A7B200584402 /* Lizection.app */;
@@ -154,6 +145,7 @@
 			);
 			name = LizectionTests;
 			packageProductDependencies = (
+				CC7B87022DE0E653000F7B4F /* ArcGIS */,
 			);
 			productName = LizectionTests;
 			productReference = CC9E0CF62D61A7B300584402 /* LizectionTests.xctest */;
@@ -177,6 +169,7 @@
 			);
 			name = LizectionUITests;
 			packageProductDependencies = (
+				CC7B87062DE0EE90000F7B4F /* ArcGIS */,
 			);
 			productName = LizectionUITests;
 			productReference = CC9E0D002D61A7B400584402 /* LizectionUITests.xctest */;
@@ -422,7 +415,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Lizection/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Lizection/Info.plist;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "We need access to your calendar to display your events and help you manage your schedule within the app.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby events and provide relevant information.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -452,7 +446,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Lizection/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Lizection/Info.plist;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "We need access to your calendar to display your events and help you manage your schedule within the app.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby events and provide relevant information.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -593,7 +588,17 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CC9E0D3F2D633E9100584402 /* ArcGIS */ = {
+		CC7B87022DE0E653000F7B4F /* ArcGIS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */;
+			productName = ArcGIS;
+		};
+		CC7B87042DE0E67E000F7B4F /* ArcGIS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */;
+			productName = ArcGIS;
+		};
+		CC7B87062DE0EE90000F7B4F /* ArcGIS */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */;
 			productName = ArcGIS;
