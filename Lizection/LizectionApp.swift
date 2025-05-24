@@ -30,7 +30,8 @@ struct LizectionApp: App {
     var body: some Scene {
         WindowGroup {
             if startWithTestView {
-                CalendarSyncTestView(modelContainer: sharedModelContainer)  
+                MainView()
+ //               CalendarSyncTestView(modelContainer: sharedModelContainer)
 //                CalendarServiceTestView()
             } else {
                 ContentView()
