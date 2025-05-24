@@ -16,6 +16,7 @@ struct LizectionApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            Location.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -29,7 +30,8 @@ struct LizectionApp: App {
     var body: some Scene {
         WindowGroup {
             if startWithTestView {
-                CalendarServiceTestView()
+                CalendarSyncTestView(modelContainer: sharedModelContainer)  
+//                CalendarServiceTestView()
             } else {
                 ContentView()
                     .modelContainer(sharedModelContainer)

@@ -9,7 +9,7 @@
 
 import Foundation // For Codable
 
-enum SyncStatus: String, Codable, CaseIterable {
+enum SyncStatus: String, Codable, CaseIterable,Equatable {
     case synced = "synced"
     case modified = "modified"
     case deleted = "deleted"
@@ -17,7 +17,7 @@ enum SyncStatus: String, Codable, CaseIterable {
     case error = "error"
 }
 
-enum GeocodingStatus: String, Codable, CaseIterable {
+enum GeocodingStatus: String, Codable, CaseIterable,Equatable {
     case notNeeded = "not_needed"
     case pending = "pending"
     case success = "success"

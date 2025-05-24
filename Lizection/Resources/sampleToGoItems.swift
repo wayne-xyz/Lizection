@@ -7,8 +7,8 @@
 
 import Foundation
 
-let sampleToGoItems: [ToGoItem] = [
-    ToGoItem(
+let sampleToGoItems: [Location] = [
+    Location(
         id: UUID(uuidString: "550e8400-e29b-41d4-a716-446655440000")!,
         name: "Perot Museum of Nature and Science",
         address: "2201 N Field St, Dallas, TX 75201",
@@ -18,7 +18,7 @@ let sampleToGoItems: [ToGoItem] = [
         endTime: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!,
         eventIdentifier: "Perot Tour"
     ),
-    ToGoItem(
+    Location(
         id: UUID(uuidString: "6ba7b810-9dad-11d1-80b4-00c04fd430c8")!,
         name: "Reunion Tower",
         address: "300 Reunion Blvd E, Dallas, TX 75207",
@@ -28,7 +28,7 @@ let sampleToGoItems: [ToGoItem] = [
         endTime: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!,
         eventIdentifier: "Reunion Tower Visit"
     ),
-    ToGoItem(
+    Location(
         id: UUID(uuidString: "7ba7b810-9dad-11d1-80b4-00c04fd430c9")!,
         name: "Dallas Arboretum and Botanical Garden",
         address: "8525 Garland Rd, Dallas, TX 75218",
@@ -38,7 +38,7 @@ let sampleToGoItems: [ToGoItem] = [
         endTime: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!,
         eventIdentifier: "Arboretum Walk"
     ),
-    ToGoItem(
+    Location(
         id: UUID(uuidString: "8ba7b810-9dad-11d1-80b4-00c04fd430c0")!,
         name: "The Sixth Floor Museum at Dealey Plaza",
         address: "411 Elm St, Dallas, TX 75202",
@@ -48,7 +48,7 @@ let sampleToGoItems: [ToGoItem] = [
         endTime: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!,
         eventIdentifier: "JFK History Tour"
     ),
-    ToGoItem(
+    Location(
         id: UUID(uuidString: "9ba7b810-9dad-11d1-80b4-00c04fd430c1")!,
         name: "Klyde Warren Park",
         address: "2012 Woodall Rodgers Fwy, Dallas, TX 75201",

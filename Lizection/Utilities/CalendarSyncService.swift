@@ -442,12 +442,14 @@ actor CalendarSyncService: CalendarSyncServiceProtocol {
         let descriptor = FetchDescriptor<Location>(
             predicate: #Predicate<Location> { location in
                 location.startTime >= dateRange.lowerBound && 
-                location.startTime <= dateRange.upperBound &&
-                location.syncStatus != SyncStatus.deleted
+                location.startTime <= dateRange.upperBound
+
             }
         )
         
-        return try modelContext.fetch(descriptor)
+        let allLocations = try modelContext.fetch(descriptor)
+        // Filter out deleted status in Swift, not in predicate
+        return allLocations.filter { $0.syncStatus != .deleted }
     }
     
     private func createEventHash(from event: EKEvent) -> String {
