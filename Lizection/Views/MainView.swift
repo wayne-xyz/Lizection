@@ -216,6 +216,7 @@ struct MainView: View {
 }
 
 // MARK: - Drag Handle Component
+let DRAGHANDLE_TITLE="Today"
 
 struct DragHandle: View {
     var body: some View {
@@ -229,7 +230,7 @@ struct DragHandle: View {
             // Header with title and controls
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Locations")
+                    Text(DRAGHANDLE_TITLE)
                         .font(.headline)
                         .fontWeight(.semibold)
                     
@@ -240,23 +241,23 @@ struct DragHandle: View {
                 
                 Spacer()
                 
-                HStack(spacing: 12) {
-                    Button(action: {
-                        // Filter action
-                    }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                    }
-                    
-                    Button(action: {
-                        // Search action
-                    }) {
-                        Image(systemName: "magnifyingglass.circle")
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                    }
-                }
+//                HStack(spacing: 12) {
+//                    Button(action: {
+//                        // Filter action
+//                    }) {
+//                        Image(systemName: "line.3.horizontal.decrease.circle")
+//                            .font(.title2)
+//                            .foregroundColor(.blue)
+//                    }
+//                    
+//                    Button(action: {
+//                        // Search action
+//                    }) {
+//                        Image(systemName: "magnifyingglass.circle")
+//                            .font(.title2)
+//                            .foregroundColor(.blue)
+//                    }
+//                }
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 8)
