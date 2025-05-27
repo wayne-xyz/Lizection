@@ -67,7 +67,7 @@ struct StorageInfo {
 
 @MainActor
 @Observable
-class LocationsViewModel {
+class LocationsViewModel :ObservableObject{
     
     // MARK: - Published Properties (Observable)
     private(set) var locations: [Location] = []
@@ -558,10 +558,12 @@ class LocationsViewModel {
             
         case .today:
             let calendar = Calendar.current
+            let now = Date()
             let today = calendar.startOfDay(for: Date())
             let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
             return locations.filter { location in
                 location.syncStatus != .deleted &&
+                location.startTime >= now && // Only upcoming events (not past)
                 location.startTime >= today && location.startTime < tomorrow
             }
             

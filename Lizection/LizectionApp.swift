@@ -29,11 +29,11 @@ struct LizectionApp: App {
     var body: some Scene {
         WindowGroup {
             if startWithTestView {
-                MainView()
+                MainView(modelContainer: sharedModelContainer)
  //               CalendarSyncTestView(modelContainer: sharedModelContainer)
 //                CalendarServiceTestView()
             } else {
-                MainView()
+                MainView(modelContainer: sharedModelContainer)
             }
         }
     }

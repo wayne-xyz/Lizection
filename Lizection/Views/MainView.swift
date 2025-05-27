@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import SwiftData
 
 struct MainView: View {
     @State private var cameraPosition = MapCameraPosition.region(
@@ -32,11 +33,16 @@ struct MainView: View {
     
     @StateObject private var locationManager = LocationManager()
     
+    // MARK: - ViewModel Integration
+    @StateObject private var locationsViewModel: LocationsViewModel
+    @State private var selectedLocationId: UUID?
+    
     // Initialize state properties. listHeight starts at 0 and will be set dynamically
     // in .onAppear based on the screen's geometry.
-    init() {
+    init(modelContainer: ModelContainer) {
         _listHeight = State(initialValue: 0) // Placeholder, actual height set in .onAppear
         _currentExpansionState = State(initialValue: .initial)
+        _locationsViewModel = StateObject(wrappedValue: LocationsViewModel(modelContainer: modelContainer))
     }
     
     var body: some View {
@@ -50,10 +56,36 @@ struct MainView: View {
             ZStack(alignment: .bottom) {
                 // MARK: - Map Background
                 Map(position: $cameraPosition) {
-                    // Map annotations will go here later
+                    // Map annotations for today's upcoming events
+                    ForEach(locationsViewModel.filteredLocations, id: \.id) { location in
+                        if location.geocodingStatus == .success {
+                            Annotation(
+                                location.name,
+                                coordinate: location.coordinate,
+                                anchor: .bottom
+                            ) {
+                                LocationPin(
+                                    location: location,
+                                    isSelected: selectedLocationId == location.id
+                                )
+                                .onTapGesture {
+                                    selectLocation(location)
+                                }
+                            }
+                        }
+                    }
                 }
                 .mapStyle(.standard)
                 .ignoresSafeArea(.all)
+                .onAppear {
+                    // Focus on first location if available
+                    if let firstLocation = locationsViewModel.filteredLocations.first,
+                       firstLocation.geocodingStatus == .success {
+                        centerOnLocation(firstLocation)
+                        selectedLocationId = firstLocation.id
+                    }
+                }
+                
                 // Custom location button positioned anywhere
                 VStack {
                     HStack {
@@ -76,22 +108,32 @@ struct MainView: View {
                 // MARK: - Floating List Overlay
                 VStack(spacing: 0) {
                     // Drag Handle
-                    DragHandle()
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                // Cycle through the three states on tap
-                                cycleListExpansionState(
-                                    min: adaptiveMinListHeight,
-                                    initial: adaptiveInitialListHeight,
-                                    max: adaptiveMaxListHeight
-                                )
-                            }
+                    DragHandle(
+                        locationsCount: locationsViewModel.filteredLocations.count,
+                        isSyncing: locationsViewModel.isSyncing
+                    )
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            // Cycle through the three states on tap
+                            cycleListExpansionState(
+                                min: adaptiveMinListHeight,
+                                initial: adaptiveInitialListHeight,
+                                max: adaptiveMaxListHeight
+                            )
                         }
+                    }
                     
                     // List Content
-                    LocationsListOverlay()
-                        .frame(height: listHeight) // Apply the current dynamic height
-                        .clipped() // Ensures content doesn't overflow if height is too small
+                    LocationsListOverlay(
+                        locations: locationsViewModel.filteredLocations,
+                        selectedLocationId: selectedLocationId,
+                        onLocationTap: { location in
+                            selectLocation(location)
+                            centerOnLocation(location)
+                        }
+                    )
+                    .frame(height: listHeight) // Apply the current dynamic height
+                    .clipped() // Ensures content doesn't overflow if height is too small
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 16)
@@ -126,17 +168,48 @@ struct MainView: View {
                 if listHeight == 0 { // Only set if it's the initial placeholder value
                     listHeight = adaptiveInitialListHeight
                 }
+                setupInitialData()
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    // Map style toggle action
-                }) {
-                    Image(systemName: "map")
-                }
-            }
+        .navigationBarHidden(true)
+
+
+    }
+    
+    // MARK: - Setup and Data Loading
+    
+    private func setupInitialData() {
+        // Set filter to show today's upcoming events
+        locationsViewModel.currentFilter = .today
+        
+        // Start background sync
+        Task {
+            await performBackgroundSync()
+        }
+    }
+    
+    private func performBackgroundSync() async {
+        await locationsViewModel.syncTodaysEvents()
+    }
+    
+    // MARK: - Location Actions
+    
+    private func selectLocation(_ location: Location) {
+        selectedLocationId = location.id
+        impactFeedbackGenerator.impactOccurred()
+    }
+    
+    private func centerOnLocation(_ location: Location) {
+        guard location.geocodingStatus == .success else { return }
+        
+        withAnimation(.easeInOut(duration: 0.5)) {
+            cameraPosition = .region(
+                MKCoordinateRegion(
+                    center: location.coordinate,
+                    latitudinalMeters: 1000,
+                    longitudinalMeters: 1000
+                )
+            )
         }
     }
     
@@ -151,7 +224,6 @@ struct MainView: View {
             )
         }
     }
-    
     
     // MARK: - Helper Methods
     
@@ -215,10 +287,51 @@ struct MainView: View {
     }
 }
 
+// MARK: - Location Pin Component
+
+struct LocationPin: View {
+    let location: Location
+    let isSelected: Bool
+    
+    var body: some View {
+        VStack(spacing: 2) {
+            Image("lizpin.fill") // Your custom SF symbol
+                .font(.title2)
+                .foregroundColor(isSelected ? .red : pinColor)
+                .background(
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 32, height: 32)
+                        .shadow(radius: 2)
+                )
+                .scaleEffect(isSelected ? 1.2 : 1.0)
+                .animation(.easeInOut(duration: 0.2), value: isSelected)
+        }
+    }
+    
+    private var pinColor: Color {
+        // Different colors based on geocoding status and time
+        if location.geocodingStatus != .success {
+            return .gray
+        }
+        
+        let now = Date()
+        if location.startTime > now {
+            return .blue // Upcoming
+        } else if location.endTime > now {
+            return .green // Current
+        } else {
+            return .orange // Past
+        }
+    }
+}
+
 // MARK: - Drag Handle Component
-let DRAGHANDLE_TITLE="Today"
 
 struct DragHandle: View {
+    let locationsCount: Int
+    let isSyncing: Bool
+    
     var body: some View {
         VStack(spacing: 8) {
             // Visual drag indicator
@@ -230,34 +343,23 @@ struct DragHandle: View {
             // Header with title and controls
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(DRAGHANDLE_TITLE)
-                        .font(.headline)
-                        .fontWeight(.semibold)
+                    HStack {
+                        Text("Today")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        
+                        if isSyncing {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                    }
                     
-                    Text("0 locations found")
+                    Text("\(locationsCount) upcoming locations")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 
                 Spacer()
-                
-//                HStack(spacing: 12) {
-//                    Button(action: {
-//                        // Filter action
-//                    }) {
-//                        Image(systemName: "line.3.horizontal.decrease.circle")
-//                            .font(.title2)
-//                            .foregroundColor(.blue)
-//                    }
-//                    
-//                    Button(action: {
-//                        // Search action
-//                    }) {
-//                        Image(systemName: "magnifyingglass.circle")
-//                            .font(.title2)
-//                            .foregroundColor(.blue)
-//                    }
-//                }
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 8)
@@ -268,46 +370,50 @@ struct DragHandle: View {
 // MARK: - Locations List Overlay
 
 struct LocationsListOverlay: View {
+    let locations: [Location]
+    let selectedLocationId: UUID?
+    let onLocationTap: (Location) -> Void
+    
     var body: some View {
         VStack(spacing: 0) {
-            
-            // Empty State
-            VStack(spacing: 16) {
-                Image(.lizpinSlash)
-                    .font(.system(size: 50))
-                    .foregroundColor(.gray.opacity(0.6))
-                
-                VStack(spacing: 8) {
-                    Text("No Locations Found")
-                        .font(.title2)
-                        .fontWeight(.medium)
-                        .foregroundColor(.primary)
+            if locations.isEmpty {
+                // Empty State
+                VStack(spacing: 16) {
+                    Image("lizpin.slash") // Your custom SF symbol
+                        .font(.system(size: 50))
+                        .foregroundColor(.gray.opacity(0.6))
                     
-                    Text("Sync your calendar events to see locations on the map")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 20)
-                }
-                
-                Button(action: {
-                    // Sync action
-                }) {
-                    HStack {
-                        Image(systemName: "arrow.clockwise")
-                        Text("Sync Calendar")
+                    VStack(spacing: 8) {
+                        Text("No Upcoming Locations")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
+                        
+                        Text("Sync your calendar events to see today's upcoming locations")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
                     }
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(Color.blue)
-                    .cornerRadius(20)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.vertical, 20)
+            } else {
+                // Locations List
+                ScrollView {
+                    LazyVStack(spacing: 8) {
+                        ForEach(locations, id: \.id) { location in
+                            LocationListItem(
+                                location: location,
+                                isSelected: selectedLocationId == location.id,
+                                onTap: { onLocationTap(location) }
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.vertical, 20)
             
             Spacer()
         }
@@ -315,11 +421,166 @@ struct LocationsListOverlay: View {
     }
 }
 
+// MARK: - Location List Item
+
+struct LocationListItem: View {
+    let location: Location
+    let isSelected: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                // Location Pin Indicator
+                VStack {
+                    Image("lizpin.fill") // Your custom SF symbol
+                        .font(.title3)
+                        .foregroundColor(pinColor)
+                    Spacer()
+                }
+                
+                // Location Info
+                VStack(alignment: .leading, spacing: 4) {
+                    // Location Name
+                    Text(location.name)
+                        .font(isOnMap ? .subheadline : .caption)
+                        .fontWeight(isOnMap ? .semibold : .medium)
+                        .foregroundColor(isOnMap ? .primary : .secondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                    
+                    // Address
+                    if let address = location.address {
+                        Text(address)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                    }
+                    
+                    // Start Time
+                    Text(location.startTime.formatted(date: .omitted, time: .shortened))
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.blue)
+                }
+                
+                Spacer()
+                
+                // Status Indicators
+                VStack(alignment: .trailing, spacing: 4) {
+                    // Geocoding Status
+                    Image(systemName: geocodingIcon)
+                        .font(.caption)
+                        .foregroundColor(geocodingColor)
+                    
+                    // Time Status
+                    timeStatusView
+                }
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? Color.blue.opacity(0.1) : Color(.systemBackground))
+                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 1)
+            )
+            .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    // MARK: - Computed Properties
+    
+    private var isOnMap: Bool {
+        location.geocodingStatus == .success
+    }
+    
+    private var pinColor: Color {
+        if !isOnMap {
+            return .gray
+        }
+        
+        let now = Date()
+        if location.startTime > now {
+            return .blue // Upcoming
+        } else if location.endTime > now {
+            return .green // Current
+        } else {
+            return .orange // Past
+        }
+    }
+    
+    private var geocodingIcon: String {
+        switch location.geocodingStatus {
+        case .success: return "checkmark.circle.fill"
+        case .pending: return "clock.circle"
+        case .failed: return "xmark.circle.fill"
+        case .retryLater: return "arrow.clockwise.circle"
+        case .notNeeded: return "minus.circle"
+        }
+    }
+    
+    private var geocodingColor: Color {
+        switch location.geocodingStatus {
+        case .success: return .green
+        case .pending: return .orange
+        case .failed: return .red
+        case .retryLater: return .yellow
+        case .notNeeded: return .gray
+        }
+    }
+    
+    @ViewBuilder
+    private var timeStatusView: some View {
+        let now = Date()
+        let timeUntilStart = location.startTime.timeIntervalSince(now)
+        
+        if timeUntilStart > 0 {
+            // Upcoming event
+            VStack(alignment: .trailing, spacing: 2) {
+                Text("in")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                Text(formatTimeInterval(timeUntilStart))
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.blue)
+            }
+        } else if location.endTime > now {
+            // Current event
+            Text("Now")
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(.green)
+        } else {
+            // Past event
+            Text("Past")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    private func formatTimeInterval(_ interval: TimeInterval) -> String {
+        let hours = Int(interval) / 3600
+        let minutes = Int(interval) % 3600 / 60
+        
+        if hours > 0 {
+            return "\(hours)h \(minutes)m"
+        } else {
+            return "\(minutes)m"
+        }
+    }
+}
+
 // MARK: - Preview
 
 #Preview {
     NavigationView {
-        MainView()
+        MainView(modelContainer: {
+            let container = try! ModelContainer(for: Location.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+            return container
+        }())
     }
 }
 
