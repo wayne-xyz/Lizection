@@ -272,7 +272,7 @@ struct LocationsListOverlay: View {
             
             // Empty State
             VStack(spacing: 16) {
-                Image(systemName: "location.slash")
+                Image(.lizpinSlash)
                     .font(.system(size: 50))
                     .foregroundColor(.gray.opacity(0.6))
                 
