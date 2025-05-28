@@ -99,7 +99,7 @@ class LocationsViewModel :ObservableObject{
     private let logger: Logger
     
     // MARK: - Private State
-    private var modelContext: ModelContext
+    var modelContext: ModelContext // open to preview access
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Computed Properties
@@ -149,14 +149,16 @@ class LocationsViewModel :ObservableObject{
     
     // MARK: - Initialization
     
-    init(modelContainer: ModelContainer) {
+    init(modelContainer: ModelContainer, useMainContext: Bool = false) {
         self.modelContainer = modelContainer
-        self.modelContext = ModelContext(modelContainer)
+        // Use mainContext if flag is true, otherwise create new context
+        self.modelContext = useMainContext ? modelContainer.mainContext : ModelContext(modelContainer)
         self.syncService = CalendarSyncService(modelContainer: modelContainer)
         self.logger = Logger(subsystem: "com.lizection.app", category: "LocationsViewModel")
         
         // Load initial data
         loadLocations()
+
     }
     
     // MARK: - Data Loading

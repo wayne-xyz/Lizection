@@ -9,6 +9,9 @@
 // MARK: - Locations List Overlay
 import SwiftUI
 
+let noLocationsText: String = "No Upcoming Locations"
+let noLocationsSubtitle: String = "Add events with locations to your calendar; we'll sync them here."
+
 struct LocationsListOverlay: View {
     let locations: [Location]
     let selectedLocationId: UUID?
@@ -24,12 +27,12 @@ struct LocationsListOverlay: View {
                         .foregroundColor(.gray.opacity(0.6))
                     
                     VStack(spacing: 8) {
-                        Text("No Upcoming Locations")
+                        Text(noLocationsText)
                             .font(.title2)
                             .fontWeight(.medium)
                             .foregroundColor(.primary)
                         
-                        Text("Sync your calendar events to see today's upcoming locations")
+                        Text(noLocationsSubtitle)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)

@@ -24,6 +24,9 @@ struct MainView: View {
         case maximized // Largest height
     }
     
+//    set the flag to control the sync behaviro in the preview macro
+    var isPreview:Bool
+    
     // @State for the current height of the list overlay
     @State private var listHeight: CGFloat
     // @State for tracking the current expansion state
@@ -39,10 +42,14 @@ struct MainView: View {
     
     // Initialize state properties. listHeight starts at 0 and will be set dynamically
     // in .onAppear based on the screen's geometry.
-    init(modelContainer: ModelContainer) {
-        _listHeight = State(initialValue: 0) // Placeholder, actual height set in .onAppear
+    init(modelContainer: ModelContainer, isPreview: Bool = false) {
+        _listHeight = State(initialValue: 0)
         _currentExpansionState = State(initialValue: .initial)
-        _locationsViewModel = StateObject(wrappedValue: LocationsViewModel(modelContainer: modelContainer))
+        _locationsViewModel = StateObject(wrappedValue: LocationsViewModel(
+            modelContainer: modelContainer,
+            useMainContext: isPreview  // Pass the preview flag to use mainContext
+        ))
+        self.isPreview = isPreview
     }
     
     var body: some View {
@@ -184,7 +191,9 @@ struct MainView: View {
         
         // Start background sync
         Task {
-            await performBackgroundSync()
+            if !isPreview{
+                await performBackgroundSync()
+            }
         }
     }
     
@@ -295,12 +304,18 @@ struct MainView: View {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("Default") {
     NavigationView {
         MainView(modelContainer: {
             let container = try! ModelContainer(for: Location.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
             return container
         }())
+    }
+}
+
+#Preview("W/ Data") {
+    NavigationView {
+        MainView(modelContainer: ModelContainer.preview,isPreview: true)
     }
 }
 
