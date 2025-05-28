@@ -9,6 +9,11 @@ import SwiftUI
 import MapKit
 import SwiftData
 
+// 3 list  height positons ratio
+let MIN_LIST_HEIGHT_RATIO: CGFloat = 0.15
+let INIT_LIST_HEIGHT_RATIO: CGFloat = 0.38
+let MAX_LIST_HEIGHT_RATIO: CGFloat = 0.85
+
 struct MainView: View {
     @State private var cameraPosition = MapCameraPosition.region(
         MKCoordinateRegion(
@@ -56,9 +61,9 @@ struct MainView: View {
         GeometryReader { geometry in
             // Define adaptive heights based on the current device's screen geometry
             // These values will scale proportionally across different iPhone sizes
-            let adaptiveMinListHeight = geometry.size.height * 0.15 // 15% of screen height
-            let adaptiveInitialListHeight = geometry.size.height * 0.4 // 40% of screen height
-            let adaptiveMaxListHeight = geometry.size.height * 0.7 // 70% of screen height
+            let adaptiveMinListHeight = geometry.size.height * MIN_LIST_HEIGHT_RATIO // 15% of screen height
+            let adaptiveInitialListHeight = geometry.size.height * INIT_LIST_HEIGHT_RATIO // 40% of screen height
+            let adaptiveMaxListHeight = geometry.size.height * MAX_LIST_HEIGHT_RATIO // 70% of screen height
             
             ZStack(alignment: .bottom) {
                 // MARK: - Map Background
@@ -317,6 +322,13 @@ struct MainView: View {
     NavigationView {
         MainView(modelContainer: ModelContainer.preview,isPreview: true)
     }
+}
+
+#Preview("W/ Data Dark") {
+    NavigationView {
+        MainView(modelContainer: ModelContainer.preview,isPreview: true)
+    }
+    .preferredColorScheme(.dark)
 }
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {

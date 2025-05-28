@@ -7,6 +7,7 @@
 // This is the  item view in the mainlist
 // MARK: - Location List Item
 import SwiftUI
+import MapKit
 
 struct LocationListItem: View {
     let location: Location
@@ -18,12 +19,13 @@ struct LocationListItem: View {
             HStack(spacing: 12) {
                 // Location Pin Indicator
                 VStack {
-                    Image("lizpin.fill") // Your custom SF symbol
-                        .font(.title3)
-                        .foregroundColor(pinColor)
+                        Image("lizpin.fill") // Your custom SF symbol
+                            .font(.title3)
+                            .foregroundColor(Color("MainColor"))
+                            .opacity(isSelected ? 1.0 : 0.0)
+                            .animation(.easeInOut(duration: 0.3), value: isSelected)
                     
                 }
-                
                 
                 // Location Info
                 VStack(alignment: .leading, spacing: 4) {
@@ -54,23 +56,29 @@ struct LocationListItem: View {
                 
                 Spacer()
                 
-                // Status Indicators
-                VStack(alignment: .trailing, spacing: 4) {
-                    // Geocoding Status
-                    Image(systemName: geocodingIcon)
-                        .font(.caption)
-                        .foregroundColor(geocodingColor)
-                    
-                    // Time Status
-                    timeStatusView
+                // Add Navigation Button
+                if isOnMap {
+                    Button(action: openInMaps) {
+                        Image(systemName: "arrow.turn.up.right")
+                            .font(.title3)
+                            .foregroundColor(Color("MainColor"))
+                            .padding(8)
+                            .background(
+                                Circle()
+                                    .fill(Color(.systemBackground))
+                                    .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+                            )
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 16)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue.opacity(0.1) : Color(.systemBackground))
-                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 1)
+                .fill(Color(.systemBackground))
+                .opacity(0.9) 
+                .shadow(color: isSelected ? .black.opacity(0.1) : .clear, radius: 2, x: 0, y: 1)
             )
             .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
         }
@@ -158,6 +166,20 @@ struct LocationListItem: View {
             return "\(minutes)m"
         }
     }
+    
+    // Add this function to handle opening Maps
+    private func openInMaps() {
+        let mapItem = MKMapItem(placemark: MKPlacemark(
+            coordinate: CLLocationCoordinate2D(
+                latitude: location.latitude,
+                longitude: location.longitude
+            )
+        ))
+        mapItem.name = location.name
+        mapItem.openInMaps(launchOptions: [
+            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
+        ])
+    }
 }
 
 
@@ -174,7 +196,7 @@ struct LocationListItem: View {
             endTime: Date().addingTimeInterval(5400),
             geocodingStatus: .success
         ),
-        isSelected: false,
+        isSelected: true,
         onTap: {}
     )
     .preferredColorScheme(.light) // Set the color scheme for this specific preview
@@ -192,6 +214,22 @@ struct LocationListItem: View {
             geocodingStatus: .success
         ),
         isSelected: false,
+        onTap: {}
+    )
+    .preferredColorScheme(.dark) // This is the key for Dark Mode!
+}
+#Preview("Dark Mode") { // Provide the name directly to the macro
+    LocationListItem(
+        location: Location(
+            name: "WWDC Event (Dark)",
+            address: "San Jose Convention Center",
+            latitude: 37.3300,
+            longitude: -121.8889,
+            startTime: Date().addingTimeInterval(1800),
+            endTime: Date().addingTimeInterval(5400),
+            geocodingStatus: .success
+        ),
+        isSelected: true,
         onTap: {}
     )
     .preferredColorScheme(.dark) // This is the key for Dark Mode!

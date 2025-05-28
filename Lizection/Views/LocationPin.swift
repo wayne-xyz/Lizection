@@ -15,14 +15,9 @@ struct LocationPin: View {
     var body: some View {
         VStack(spacing: 2) {
             Image("lizpin.fill") // Your custom SF symbol
-                .font(.title2)
-                .foregroundColor(isSelected ? .accentColor : pinColor)
-                .background(
-                    Circle()
-                        .fill(.white)
-                        .frame(width: 32, height: 32)
-                        .shadow(radius: 2)
-                )
+                .font(.largeTitle)
+                .foregroundColor(isSelected ? Color("MainColor") : pinColor)
+                .shadow(radius: 10)
                 .scaleEffect(isSelected ? 1.2 : 1.0)
                 .animation(.easeInOut(duration: 0.2), value: isSelected)
         }

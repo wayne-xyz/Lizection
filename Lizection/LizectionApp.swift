@@ -30,6 +30,7 @@ struct LizectionApp: App {
         WindowGroup {
             if startWithTestView {
                 MainView(modelContainer: sharedModelContainer)
+                    .accentColor(.black)
  //               CalendarSyncTestView(modelContainer: sharedModelContainer)
 //                CalendarServiceTestView()
             } else {
