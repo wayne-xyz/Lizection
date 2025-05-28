@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CC7B87032DE0E653000F7B4F /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC7B87022DE0E653000F7B4F /* ArcGIS */; };
+		CC7B87052DE0E67E000F7B4F /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC7B87042DE0E67E000F7B4F /* ArcGIS */; };
+		CC7B87072DE0EE90000F7B4F /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = CC7B87062DE0EE90000F7B4F /* ArcGIS */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		CC9E0CF72D61A7B300584402 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC7B87052DE0E67E000F7B4F /* ArcGIS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC7B87032DE0E653000F7B4F /* ArcGIS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC7B87072DE0EE90000F7B4F /* ArcGIS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +121,7 @@
 			);
 			name = Lizection;
 			packageProductDependencies = (
+				CC7B87042DE0E67E000F7B4F /* ArcGIS */,
 			);
 			productName = Lizection;
 			productReference = CC9E0CE42D61A7B200584402 /* Lizection.app */;
@@ -135,6 +145,7 @@
 			);
 			name = LizectionTests;
 			packageProductDependencies = (
+				CC7B87022DE0E653000F7B4F /* ArcGIS */,
 			);
 			productName = LizectionTests;
 			productReference = CC9E0CF62D61A7B300584402 /* LizectionTests.xctest */;
@@ -158,6 +169,7 @@
 			);
 			name = LizectionUITests;
 			packageProductDependencies = (
+				CC7B87062DE0EE90000F7B4F /* ArcGIS */,
 			);
 			productName = LizectionUITests;
 			productReference = CC9E0D002D61A7B400584402 /* LizectionUITests.xctest */;
@@ -171,7 +183,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					CC9E0CE32D61A7B200584402 = {
 						CreatedOnToolsVersion = 16.2;
@@ -195,6 +207,9 @@
 			);
 			mainGroup = CC9E0CDB2D61A7B200584402;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CC9E0CE52D61A7B200584402 /* Products */;
 			projectDirPath = "";
@@ -304,6 +319,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = BD72FKWLAY;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -367,6 +383,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = BD72FKWLAY;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -396,9 +413,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Lizection/Preview Content\"";
-				DEVELOPMENT_TEAM = BD72FKWLAY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "We need access to your calendar to display your events and help you manage your schedule within the app.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby events and provide relevant information.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -425,9 +444,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Lizection/Preview Content\"";
-				DEVELOPMENT_TEAM = BD72FKWLAY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "We need access to your calendar to display your events and help you manage your schedule within the app.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby events and provide relevant information.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -452,7 +473,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = BD72FKWLAY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
@@ -471,7 +491,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = BD72FKWLAY;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
@@ -489,7 +508,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = BD72FKWLAY;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Ellequation.LizectionUITests;
@@ -506,7 +524,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = BD72FKWLAY;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Ellequation.LizectionUITests;
@@ -558,6 +575,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Esri/arcgis-maps-sdk-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 200.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC7B87022DE0E653000F7B4F /* ArcGIS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */;
+			productName = ArcGIS;
+		};
+		CC7B87042DE0E67E000F7B4F /* ArcGIS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */;
+			productName = ArcGIS;
+		};
+		CC7B87062DE0EE90000F7B4F /* ArcGIS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC9E0D3E2D633CD200584402 /* XCRemoteSwiftPackageReference "arcgis-maps-sdk-swift" */;
+			productName = ArcGIS;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CC9E0CDC2D61A7B200584402 /* Project object */;
 }

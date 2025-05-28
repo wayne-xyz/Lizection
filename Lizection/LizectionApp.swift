@@ -10,9 +10,12 @@ import SwiftData
 
 @main
 struct LizectionApp: App {
+    // Toggle this flag to start with the test view during development
+    private let startWithTestView = true
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Location.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,8 +28,14 @@ struct LizectionApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if startWithTestView {
+                MainView(modelContainer: sharedModelContainer)
+                    .accentColor(.black)
+ //               CalendarSyncTestView(modelContainer: sharedModelContainer)
+//                CalendarServiceTestView()
+            } else {
+                MainView(modelContainer: sharedModelContainer)
+            }
         }
-        .modelContainer(sharedModelContainer)
     }
 }
