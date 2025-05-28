@@ -16,7 +16,7 @@
 Lizection is an iOS application that helps users manage and navigate to their calendar event locations efficiently. It integrates with Apple Calendar to sync events and provides a seamless experience for viewing and navigating to event locations.
 
 <div >
-  <img src="https://img.shields.io/badge/Swift-5.9-orange.svg" alt="Swift 6.1">
+  <img src="https://img.shields.io/badge/Swift-6.1-orange.svg" alt="Swift 6.1">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
 </div>
 
