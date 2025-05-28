@@ -2,7 +2,7 @@
 
 
 <div align="center">
-<img src="resource/app_icon.png" width="100" height="100" alt="Lizection App Icon" style="border: 1px solid #ccc; border-radius: 20px;">
+<img src="Resource/app_icon.png" width="100" height="100" alt="Lizection App Icon" style="border: 1px solid #ccc; border-radius: 20px;">
 </div>
 
 > Live Your Locations 🎯
